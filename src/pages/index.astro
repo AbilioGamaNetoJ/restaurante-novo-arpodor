@@ -1,0 +1,354 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { restaurant } from '../data/restaurant';
+import heroFacade from '../assets/hero-facade.png';
+import anchova from '../assets/anchova.webp';
+import fishAndChips from '../assets/fish-and-chips.jpg';
+import bifeAcebolado from '../assets/bife-acebolado.jpg';
+import mixedPlate from '../assets/mixed-plate.jpg';
+
+const description =
+  'Café, pratos feitos, porções e lanches na Praia da Armação. Peça online, retire no local ou receba em casa.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: restaurant.name,
+  telephone: '+55 48 99122-8857',
+  priceRange: '$$',
+  servesCuisine: ['Brasileira', 'Frutos do mar', 'Lanches'],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: restaurant.address,
+    addressLocality: 'Florianópolis',
+    addressRegion: 'SC',
+    postalCode: restaurant.postalCode,
+    addressCountry: 'BR'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -27.7503693,
+    longitude: -48.5032299
+  },
+  sameAs: [restaurant.instagram, restaurant.maps],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: 5,
+    reviewCount: restaurant.reviewCount,
+    bestRating: 5
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '08:00',
+      closes: '00:00'
+    }
+  ]
+};
+
+const gallery = [
+  { image: anchova, title: 'Filé de anchova grelhada', label: 'Prato feito' },
+  { image: fishAndChips, title: 'Isca de peixe com fritas', label: 'Porção' },
+  { image: bifeAcebolado, title: 'Bife acebolado', label: 'Almoço' },
+  { image: mixedPlate, title: 'Porção mista', label: 'Para compartilhar' }
+];
+
+const services = [
+  { icon: 'coffee', number: '01', title: 'Café', copy: 'Para começar o dia com calma.' },
+  { icon: 'plate', number: '02', title: 'Pratos feitos', copy: 'Comida de verdade no almoço.' },
+  { icon: 'shrimp', number: '03', title: 'Porções', copy: 'Sabores para dividir na mesa.' },
+  { icon: 'snack', number: '04', title: 'Lanches', copy: 'Aquela fome resolvida sem demora.' }
+];
+---
+
+<BaseLayout title={`${restaurant.name} | Praia da Armação`} {description}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+
+  <header class="site-header" data-header>
+    <div class="shell nav-wrap">
+      <a class="brand" href="#inicio" aria-label={`${restaurant.name}, início`}>
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span></span>
+        <span><strong>Novo Arpoador</strong><small>Restaurante · Armação</small></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="#sabores">Sabores</a>
+        <a href="#experiencia">Experiência</a>
+        <a href="#avaliacoes">Avaliações</a>
+        <a href="#visite">Visite</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="nav-order" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio <span aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle><span></span><span></span></button>
+      </div>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="Navegação mobile" data-mobile-menu>
+      <a href="#sabores">Sabores</a><a href="#experiencia">Experiência</a><a href="#avaliacoes">Avaliações</a><a href="#visite">Visite</a>
+    </nav>
+  </header>
+
+  <main id="inicio">
+    <section class="hero" aria-labelledby="hero-title">
+      <Image class="hero-image" src={heroFacade} alt="Fachada do Restaurante Novo Arpoador na Praia da Armação" widths={[640, 960, 1280, 1600]} sizes="100vw" loading="eager" fetchpriority="high" />
+      <div class="hero-scrim"></div>
+      <div class="shell hero-layout">
+        <div class="hero-content">
+          <p class="eyebrow light"><span></span> Praia da Armação · Floripa</p>
+          <h1 id="hero-title">Sabor de praia.<br /><em>Comida de verdade.</em></h1>
+          <p class="hero-copy">Do café ao jantar, uma mesa gostosa para chamar de sua — pertinho do mar.</p>
+          <div class="hero-actions">
+            <a class="button button-sun" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio e pedir <span aria-hidden="true">→</span></a>
+            <a class="button button-glass" href={restaurant.directions} target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+              Como chegar
+            </a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Informações rápidas">
+          <div class="open-status" data-open-status><i></i><span>Ter–Dom, das 8h à meia-noite</span></div>
+          <div class="hero-card-rating">
+            <strong>{restaurant.rating}</strong>
+            <span><b aria-label="5 estrelas">★★★★★</b><small>{restaurant.reviewCount} avaliações no Google</small></span>
+          </div>
+          <div class="hero-card-line"></div>
+          <p>Av. Antônio Borges dos Santos, 717</p>
+          <a href={restaurant.directions} target="_blank" rel="noreferrer">2 min da Praia da Armação <span>↗</span></a>
+        </aside>
+      </div>
+      <a class="scroll-cue" href="#sabores" aria-label="Descobrir os sabores"><span>↓</span> Role para descobrir</a>
+    </section>
+
+    <div class="flavor-ribbon" aria-label="Destaques do restaurante">
+      <div><span>CAFÉ FRESQUINHO</span><i>✦</i><span>ALMOÇO CASEIRO</span><i>✦</i><span>PEIXE DA ILHA</span><i>✦</i><span>PORÇÕES PARA DIVIDIR</span><i>✦</i><span>DELIVERY E RETIRADA</span></div>
+    </div>
+
+    <section class="intro-section section" id="sabores" aria-labelledby="sabores-title">
+      <div class="shell intro-grid reveal">
+        <div>
+          <p class="eyebrow"><span></span> Tem sabor para todo momento</p>
+          <h2 id="sabores-title">Seu novo ponto de encontro <em>na Armação.</em></h2>
+        </div>
+        <div class="intro-right">
+          <p>Receitas bem servidas, clima leve e aquele atendimento que faz você querer voltar. Para almoçar, beliscar ou encontrar os amigos.</p>
+          <a class="text-link" href={restaurant.menu} target="_blank" rel="noreferrer">Explorar o cardápio <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="shell service-list reveal" aria-label="Opções do restaurante">
+        {services.map((service) => (
+          <a class="service-card" href={restaurant.menu} target="_blank" rel="noreferrer">
+            <span class="service-number">{service.number}</span>
+            <span class="service-icon" aria-hidden="true" data-icon={service.icon}>
+              {service.icon === 'coffee' && <svg viewBox="0 0 32 32"><path d="M6 11h17v8a7 7 0 0 1-7 7h-3a7 7 0 0 1-7-7v-8Z"/><path d="M23 14h2a4 4 0 0 1 0 8h-3M10 7c0-2 2-2 2-4M17 7c0-2 2-2 2-4"/></svg>}
+              {service.icon === 'plate' && <svg viewBox="0 0 32 32"><circle cx="16" cy="17" r="11"/><circle cx="16" cy="17" r="6"/><path d="M5 28h22"/></svg>}
+              {service.icon === 'shrimp' && <svg viewBox="0 0 32 32"><path d="M26 9c0 10-5 17-13 17-5 0-8-3-8-7 0-3 2-5 5-5h8"/><path d="M20 7c2-2 5-1 6 2M11 14c0 5 3 8 8 8M8 25l-2 3M12 26v3"/><circle cx="23" cy="10" r="1"/></svg>}
+              {service.icon === 'snack' && <svg viewBox="0 0 32 32"><path d="M5 15c1-6 5-9 11-9s10 3 11 9H5ZM5 21h22M7 25h18M4 18h24"/><path d="M11 11h.1M16 9h.1M21 11h.1"/></svg>}
+            </span>
+            <span class="service-copy"><strong>{service.title}</strong><small>{service.copy}</small></span>
+            <span class="service-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="gallery-section section" id="experiencia" aria-labelledby="galeria-title">
+      <div class="shell section-heading row-heading reveal">
+        <div>
+          <p class="eyebrow"><span></span> Direto da nossa cozinha</p>
+          <h2 id="galeria-title">Bonito de ver.<br /><em>Melhor ainda de provar.</em></h2>
+        </div>
+        <div class="heading-aside">
+          <p>Ingredientes frescos e pratos que chegam à mesa cheios de cor e sabor.</p>
+          <a class="text-link" href={restaurant.instagram} target="_blank" rel="noreferrer">Siga no Instagram <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="shell food-grid reveal">
+        {gallery.map((item, index) => (
+          <a class:list={['food-card', `food-card-${index + 1}`]} href={restaurant.menu} target="_blank" rel="noreferrer">
+            <Image src={item.image} alt={item.title} widths={[440, 640, 960]} sizes={index === 0 ? '(max-width: 760px) 100vw, 50vw' : '(max-width: 760px) 50vw, 25vw'} loading={index === 0 ? 'eager' : 'lazy'} />
+            <span class="food-order">Ver no cardápio ↗</span>
+            <div class="food-card-label"><span>{item.label}</span><h3>{item.title}</h3></div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="ways-section" aria-labelledby="ways-title">
+      <div class="shell ways-head reveal">
+        <div>
+          <p class="eyebrow light"><span></span> Do seu jeito</p>
+          <h2 id="ways-title">Você escolhe como aproveitar.</h2>
+        </div>
+        <p>O mesmo capricho, seja qual for a sua rotina.</p>
+      </div>
+      <div class="shell ways-list reveal">
+        <article><span>01</span><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 5v8M10 5v8M8 5v20M24 5v20M21 5v8c0 2 6 2 6 0V5"/></svg><h3>Coma no local</h3><p>Sente, respire e aproveite o clima da Armação.</p></article>
+        <article><span>02</span><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 13h22l-2 14H7L5 13Z"/><path d="M11 13V9a5 5 0 0 1 10 0v4M4 27h24"/></svg><h3>Receba em casa</h3><p>Faça seu pedido e a gente leva o sabor até você.</p></article>
+        <article><span>03</span><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m5 17 11-9 11 9M8 15v12h16V15M12 27v-7h8v7"/></svg><h3>Retire no balcão</h3><p>Peça antes, passe para buscar e siga seu caminho.</p></article>
+      </div>
+    </section>
+
+    <section class="reviews-section section" id="avaliacoes" aria-labelledby="avaliacoes-title" data-carousel>
+      <div class="shell reviews-head reveal">
+        <div>
+          <p class="eyebrow"><span></span> Quem vem, recomenda</p>
+          <h2 id="avaliacoes-title">Histórias de quem já sentou <em>à nossa mesa.</em></h2>
+        </div>
+        <div class="reviews-actions">
+          <a class="rating-lockup" href={restaurant.maps} target="_blank" rel="noreferrer" aria-label="Ver avaliações no Google Maps">
+            <span class="google-g">G</span>
+            <span><strong>{restaurant.rating}</strong><small><b aria-label="5 estrelas">★★★★★</b> no Google</small></span>
+          </a>
+          <div class="carousel-buttons" aria-label="Controles das avaliações">
+            <button type="button" data-carousel-prev aria-label="Avaliação anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+            <button type="button" data-carousel-next aria-label="Próxima avaliação"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="reviews-viewport reveal" data-carousel-viewport tabindex="0" aria-label="Avaliações de clientes">
+        <div class="reviews-track shell">
+          {restaurant.reviews.map((review) => (
+            <figure class="review-card" data-carousel-slide>
+              <div class="quote-mark" aria-hidden="true">“</div>
+              <div class="review-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>{review.text}</blockquote>
+              <figcaption>
+                <span class="review-avatar" aria-hidden="true">{review.name.charAt(0).toUpperCase()}</span>
+                <span><strong>{review.name}</strong><small>{review.when}</small></span>
+                <span class="verified" title="Avaliação verificada" aria-label="Avaliação verificada">✓</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+      <div class="shell reviews-progress reveal">
+        <div class="progress-dots" data-carousel-dots aria-hidden="true">
+          {restaurant.reviews.map((_, index) => <i class:list={{ active: index === 0 }}></i>)}
+        </div>
+        <span><b data-carousel-current>01</b> / {String(restaurant.reviews.length).padStart(2, '0')}</span>
+        <a href={restaurant.maps} target="_blank" rel="noreferrer">Ver todas no Google ↗</a>
+      </div>
+    </section>
+
+    <section class="visit-section section" id="visite" aria-labelledby="visite-title">
+      <div class="shell visit-wrap reveal">
+        <div class="visit-map">
+          <iframe title="Mapa de localização do Restaurante Novo Arpoador" src="https://www.google.com/maps?q=Restaurante+Novo+Arpoador,+Av.+Ant%C3%B4nio+Borges+dos+Santos,+717,+Florian%C3%B3polis,+SC&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <a href={restaurant.directions} target="_blank" rel="noreferrer">Abrir no Google Maps <span>↗</span></a>
+        </div>
+        <div class="visit-copy">
+          <p class="eyebrow"><span></span> Vem para a Armação</p>
+          <h2 id="visite-title">A gente prepara.<br /><em>Você aproveita.</em></h2>
+          <div class="visit-address">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+            <address>{restaurant.address}<br />{restaurant.neighborhood}</address>
+          </div>
+          <div class="hours-compact">
+            <div><span>Terça a domingo</span><strong>08h — 00h</strong></div>
+            <div><span>Segunda-feira</span><strong class="closed">Fechado</strong></div>
+          </div>
+          <div class="contact-actions">
+            <a class="button button-teal" href={restaurant.directions} target="_blank" rel="noreferrer">Traçar rota <span aria-hidden="true">↗</span></a>
+            <a class="phone-link" href={restaurant.phoneHref}>{restaurant.phone}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing-cta" style={`--closing-image: url(${heroFacade.src})`}>
+      <div class="shell closing-wrap reveal">
+        <p class="eyebrow light"><span></span> Bateu a fome?</p>
+        <h2>Hoje tem<br /><em>Novo Arpoador.</em></h2>
+        <p>Escolha seus favoritos e faça seu pedido agora.</p>
+        <div>
+          <a class="button button-sun" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio e pedir <span aria-hidden="true">→</span></a>
+          <a class="whatsapp-link" href={restaurant.whatsapp} target="_blank" rel="noreferrer">Pedir pelo WhatsApp ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-main">
+      <a class="brand brand-footer" href="#inicio"><span class="brand-mark" aria-hidden="true"><span></span><span></span></span><span><strong>Novo Arpoador</strong><small>Restaurante · Armação</small></span></a>
+      <div class="footer-links"><a href={restaurant.instagram} target="_blank" rel="noreferrer">Instagram ↗</a><a href={restaurant.maps} target="_blank" rel="noreferrer">Google Maps ↗</a><a href={restaurant.menu} target="_blank" rel="noreferrer">Cardápio ↗</a></div>
+      <span class="footer-note">© {new Date().getFullYear()} · Feito com sabor na Ilha</span>
+    </div>
+  </footer>
+
+  <a class="floating-order" href={restaurant.menu} target="_blank" rel="noreferrer"><span aria-hidden="true">✦</span> Pedir agora</a>
+
+  <script>
+    const header = document.querySelector<HTMLElement>('[data-header]');
+    const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+
+    const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+
+    menuToggle?.addEventListener('click', () => {
+      const open = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', String(!open));
+      menuToggle.setAttribute('aria-label', open ? 'Abrir menu' : 'Fechar menu');
+      mobileMenu?.classList.toggle('is-open', !open);
+    });
+    mobileMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+      menuToggle?.setAttribute('aria-expanded', 'false');
+      mobileMenu.classList.remove('is-open');
+    }));
+
+    const status = document.querySelector<HTMLElement>('[data-open-status]');
+    if (status) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Sao_Paulo', weekday: 'short', hour: 'numeric', hour12: false
+      }).formatToParts(new Date());
+      const day = parts.find((part) => part.type === 'weekday')?.value;
+      const hour = Number(parts.find((part) => part.type === 'hour')?.value ?? 0);
+      const isOpen = day !== 'Mon' && hour >= 8;
+      status.classList.toggle('is-closed', !isOpen);
+      const label = status.querySelector('span');
+      if (label) label.textContent = isOpen ? 'Aberto agora · até meia-noite' : day === 'Mon' ? 'Fechado hoje · abre terça às 8h' : 'Fechado agora · abre às 8h';
+    }
+
+    const carousel = document.querySelector<HTMLElement>('[data-carousel]');
+    if (carousel) {
+      const viewport = carousel.querySelector<HTMLElement>('[data-carousel-viewport]');
+      const slides = [...carousel.querySelectorAll<HTMLElement>('[data-carousel-slide]')];
+      const prev = carousel.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+      const next = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
+      const current = carousel.querySelector<HTMLElement>('[data-carousel-current]');
+      const dots = [...carousel.querySelectorAll<HTMLElement>('[data-carousel-dots] i')];
+
+      const slideWidth = () => slides[1] ? slides[1].offsetLeft - slides[0].offsetLeft : slides[0]?.getBoundingClientRect().width ?? 0;
+      const activeIndex = () => viewport ? Math.max(0, Math.min(slides.length - 1, Math.round(viewport.scrollLeft / slideWidth()))) : 0;
+      const updateCarousel = () => {
+        const index = activeIndex();
+        if (current) current.textContent = String(index + 1).padStart(2, '0');
+        dots.forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === index));
+        if (prev && viewport) prev.disabled = viewport.scrollLeft < 8;
+        if (next && viewport) next.disabled = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 8;
+      };
+      const move = (direction: number) => viewport?.scrollBy({ left: slideWidth() * direction, behavior: 'smooth' });
+      prev?.addEventListener('click', () => move(-1));
+      next?.addEventListener('click', () => move(1));
+      viewport?.addEventListener('scroll', updateCarousel, { passive: true });
+      viewport?.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); }
+        if (event.key === 'ArrowRight') { event.preventDefault(); move(1); }
+      });
+      new ResizeObserver(updateCarousel).observe(viewport!);
+      updateCarousel();
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+  </script>
+</BaseLayout>
