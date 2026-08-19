@@ -14,14 +14,20 @@ export const restaurant = {
     'https://wa.me/5548991228857?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20pedido.',
   rating: '5,0',
   reviewCount: 5,
-  hours: [
-    { day: 'Segunda-feira', value: 'Fechado', closed: true },
-    { day: 'Terça-feira', value: '08h às 00h', closed: false },
-    { day: 'Quarta-feira', value: '08h às 00h', closed: false },
-    { day: 'Quinta-feira', value: '08h às 00h', closed: false },
-    { day: 'Sexta-feira', value: '08h às 00h', closed: false },
-    { day: 'Sábado', value: '08h às 00h', closed: false },
-    { day: 'Domingo', value: '08h às 00h', closed: false }
+  dishes: [
+    { title: 'Filé de anchova grelhada', label: 'Prato feito' },
+    { title: 'Isca de peixe com fritas', label: 'Porção' },
+    { title: 'Camarão à milanesa', label: 'Frutos do mar' },
+    { title: 'Bife acebolado', label: 'Prato feito' },
+    { title: 'Hambúrguer Arpoador', label: 'Lanche' },
+    { title: 'Café da manhã', label: 'Café' },
+    { title: 'Porção mista', label: 'Para compartilhar' }
+  ],
+  experience: [
+    { hour: '08h', title: 'Café', copy: 'Começa o dia com café, pão e mesa tranquila.' },
+    { hour: '12h', title: 'Almoço', copy: 'Prato feito com peixe fresco, bife ou frango.' },
+    { hour: '17h', title: 'Porções', copy: 'Isca, camarão e a mista para dividir.' },
+    { hour: '22h', title: 'Até tarde', copy: 'Lanche, petisco e atendimento até meia-noite.' }
   ],
   reviews: [
     {
