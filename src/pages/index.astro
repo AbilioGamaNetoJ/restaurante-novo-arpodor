@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { restaurant } from '../data/restaurant';
 import heroFacade from '../assets/hero-facade.png';
+import logo from '../assets/logo.jpg';
 import anchova from '../assets/anchova.jpg';
 import iscaPeixe from '../assets/isca-peixe.jpg';
 import camaraoMilanesa from '../assets/camarao-milanesa.jpg';
@@ -18,6 +19,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Restaurant',
   name: restaurant.name,
+  logo: 'https://novoarpoador.vercel.app/logo.jpg',
   telephone: '+55 48 99122-8857',
   priceRange: '$$',
   servesCuisine: ['Brasileira', 'Frutos do mar', 'Lanches'],
@@ -69,6 +71,16 @@ const services = [
 ];
 
 const ribbonItems = ['CAFÉ FRESQUINHO', 'ALMOÇO CASEIRO', 'PEIXE DA ILHA', 'PORÇÕES PARA DIVIDIR', 'DELIVERY E RETIRADA'];
+
+const navItems = [
+  { href: '#cardapio', label: 'Cardápio' },
+  { href: '#pratos', label: 'Pratos' },
+  { href: '#experiencia', label: 'Experiência' },
+  { href: '#pedido', label: 'Como pedir' },
+  { href: '#avaliacoes', label: 'Avaliações' },
+  { href: '#onde', label: 'Onde fica' },
+  { href: '#peca', label: 'Peça agora' }
+];
 ---
 
 <BaseLayout title={`${restaurant.name} | Armação, Florianópolis`} {description}>
@@ -77,15 +89,12 @@ const ribbonItems = ['CAFÉ FRESQUINHO', 'ALMOÇO CASEIRO', 'PEIXE DA ILHA', 'PO
   <header class="site-header" data-header>
     <div class="shell nav-wrap">
       <a class="brand" href="#inicio" aria-label={`${restaurant.name}, início`}>
-        <span class="brand-mark" aria-hidden="true"><span></span><span></span></span>
-        <span><strong>Novo Arpoador</strong><small>Armação · Florianópolis</small></span>
+        <Image class="brand-logo" src={logo} alt="" widths={[80, 120, 160]} sizes="42px" loading="eager" fetchpriority="high" />
       </a>
       <nav class="desktop-nav" aria-label="Navegação principal">
-        <a href="#pratos">Pratos</a>
-        <a href="#experiencia">Experiência</a>
-        <a href="#pedido">Como pedir</a>
-        <a href="#avaliacoes">Avaliações</a>
-        <a href="#onde">Onde fica</a>
+        {navItems.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
       </nav>
       <div class="nav-actions">
         <a class="nav-order" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio <span aria-hidden="true">↗</span></a>
@@ -93,7 +102,9 @@ const ribbonItems = ['CAFÉ FRESQUINHO', 'ALMOÇO CASEIRO', 'PEIXE DA ILHA', 'PO
       </div>
     </div>
     <nav class="mobile-menu" id="mobile-menu" aria-label="Navegação mobile" data-mobile-menu>
-      <a href="#pratos">Pratos</a><a href="#experiencia">Experiência</a><a href="#pedido">Como pedir</a><a href="#avaliacoes">Avaliações</a><a href="#onde">Onde fica</a>
+      {navItems.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
     </nav>
   </header>
 
@@ -303,9 +314,9 @@ const ribbonItems = ['CAFÉ FRESQUINHO', 'ALMOÇO CASEIRO', 'PEIXE DA ILHA', 'PO
       </div>
     </section>
 
-    <section class="closing-cta" style={`--closing-image: url(${heroFacade.src})`}>
+    <section class="closing-cta" id="peca" aria-labelledby="peca-title" style={`--closing-image: url(${heroFacade.src})`}>
       <div class="shell closing-wrap reveal">
-        <h2>Faça seu pedido</h2>
+        <h2 id="peca-title">Faça seu pedido</h2>
         <p>Cardápio online para entrega e retirada, ou venha comer no salão.</p>
         <div>
           <a class="button button-sun" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio <span aria-hidden="true">→</span></a>
@@ -317,7 +328,9 @@ const ribbonItems = ['CAFÉ FRESQUINHO', 'ALMOÇO CASEIRO', 'PEIXE DA ILHA', 'PO
 
   <footer class="site-footer">
     <div class="shell footer-main">
-      <a class="brand brand-footer" href="#inicio"><span class="brand-mark" aria-hidden="true"><span></span><span></span></span><span><strong>Novo Arpoador</strong><small>Armação · Florianópolis</small></span></a>
+      <a class="brand brand-footer" href="#inicio" aria-label={`${restaurant.name}, início`}>
+        <Image class="brand-logo" src={logo} alt="" widths={[160, 240, 320]} sizes="68px" />
+      </a>
       <div class="footer-links"><a href={restaurant.instagram} target="_blank" rel="noreferrer">Instagram ↗</a><a href={restaurant.maps} target="_blank" rel="noreferrer">Google Maps ↗</a><a href={restaurant.menu} target="_blank" rel="noreferrer">Cardápio ↗</a><a href={restaurant.phoneHref}>{restaurant.phone}</a></div>
       <span class="footer-note">© {new Date().getFullYear()} {restaurant.name}</span>
     </div>
