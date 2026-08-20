@@ -98,14 +98,19 @@ const navItems = [
       </nav>
       <div class="nav-actions">
         <a class="nav-order" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio <span aria-hidden="true">↗</span></a>
-        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle><span></span><span></span></button>
+        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle><span></span><span></span><span></span></button>
       </div>
     </div>
     <nav class="mobile-menu" id="mobile-menu" aria-label="Navegação mobile" data-mobile-menu>
-      {navItems.map((item) => (
-        <a href={item.href}>{item.label}</a>
+      {navItems.map((item, index) => (
+        <a href={item.href} style={`--i: ${index}`}>
+          <small>{String(index + 1).padStart(2, '0')}</small>
+          <span>{item.label}</span>
+        </a>
       ))}
+      <a class="mobile-menu-cta" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio <span aria-hidden="true">↗</span></a>
     </nav>
+    <div class="menu-backdrop" data-menu-backdrop></div>
   </header>
 
   <main id="inicio">
@@ -119,9 +124,9 @@ const navItems = [
           <p class="hero-copy">Café da manhã, prato feito no almoço, porções e lanches até tarde. Av. Antônio Borges dos Santos, 717 — a dois minutos da praia.</p>
           <div class="hero-actions">
             <a class="button button-sun" href={restaurant.menu} target="_blank" rel="noreferrer">Ver cardápio e pedir <span aria-hidden="true">→</span></a>
-            <a class="button button-glass" href={restaurant.directions} target="_blank" rel="noreferrer">
+            <a class="button button-glass" href={restaurant.directions} target="_blank" rel="noreferrer" aria-label="Como chegar">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
-              Como chegar
+              <span>Como chegar</span>
             </a>
           </div>
           <p class="open-status" data-open-status><i></i><span>Terça a domingo, das 8h à meia-noite</span></p>
@@ -196,11 +201,13 @@ const navItems = [
     <section class="experience-section section" id="experiencia" aria-labelledby="experiencia-title">
       <div class="shell experience-wrap">
         <div class="experience-copy">
-          <h2 id="experiencia-title">Do café da manhã à meia-noite</h2>
-          <p>Família no almoço, amigos no petisco, lanche até tarde. A dois minutos da praia, com mesa no salão o dia inteiro.</p>
+          <div class="reveal">
+            <h2 id="experiencia-title">Do café da manhã à meia-noite</h2>
+            <p>Família no almoço, amigos no petisco, lanche até tarde. A dois minutos da praia, com mesa no salão o dia inteiro.</p>
+          </div>
           <ol class="experience-moments">
-            {restaurant.experience.map((moment) => (
-              <li>
+            {restaurant.experience.map((moment, index) => (
+              <li class="experience-card" style={`--i: ${index}`}>
                 <span>{moment.hour}</span>
                 <div>
                   <strong>{moment.title}</strong>
@@ -210,7 +217,7 @@ const navItems = [
             ))}
           </ol>
         </div>
-        <figure class="experience-visual">
+        <figure class="experience-visual reveal">
           <Image src={heroFacade} alt="Fachada do Restaurante Novo Arpoador na Praia da Armação" widths={[640, 960, 1280]} sizes="(max-width: 900px) 100vw, 50vw" />
           <figcaption>Av. Antônio Borges dos Santos, 717 · Armação</figcaption>
         </figure>
@@ -342,21 +349,39 @@ const navItems = [
     const header = document.querySelector<HTMLElement>('[data-header]');
     const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
     const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+    const menuBackdrop = document.querySelector<HTMLElement>('[data-menu-backdrop]');
 
-    const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
+    const updateHeader = () => {
+      if (!header?.classList.contains('is-menu-open')) {
+        header?.classList.toggle('is-scrolled', window.scrollY > 24);
+      }
+    };
     updateHeader();
     window.addEventListener('scroll', updateHeader, { passive: true });
 
+    const setMenuOpen = (open: boolean) => {
+      menuToggle?.setAttribute('aria-expanded', String(open));
+      menuToggle?.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+      mobileMenu?.classList.toggle('is-open', open);
+      menuBackdrop?.classList.toggle('is-open', open);
+      header?.classList.toggle('is-menu-open', open);
+      document.body.classList.toggle('menu-open', open);
+      if (!open) header?.classList.toggle('is-scrolled', window.scrollY > 24);
+    };
+
     menuToggle?.addEventListener('click', () => {
-      const open = menuToggle.getAttribute('aria-expanded') === 'true';
-      menuToggle.setAttribute('aria-expanded', String(!open));
-      menuToggle.setAttribute('aria-label', open ? 'Abrir menu' : 'Fechar menu');
-      mobileMenu?.classList.toggle('is-open', !open);
+      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
     });
+    menuBackdrop?.addEventListener('click', () => setMenuOpen(false));
     mobileMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-      menuToggle?.setAttribute('aria-expanded', 'false');
-      mobileMenu.classList.remove('is-open');
+      setMenuOpen(false);
     }));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900) setMenuOpen(false);
+    });
 
     const status = document.querySelector<HTMLElement>('[data-open-status]');
     if (status) {
@@ -410,5 +435,18 @@ const navItems = [
       });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+
+    const experienceCards = document.querySelectorAll<HTMLElement>('.experience-card');
+    if (experienceCards.length) {
+      const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            cardObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+      experienceCards.forEach((card) => cardObserver.observe(card));
+    }
   </script>
 </BaseLayout>
